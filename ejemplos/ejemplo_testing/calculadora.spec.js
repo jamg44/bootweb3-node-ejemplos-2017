@@ -1,7 +1,9 @@
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
-const Calculadora = require('./calculadora');
+const rewire = require('rewire');
+const nock = require('nock');
+const Calculadora = rewire('./calculadora');
 
 describe('calculadora', function() {
 
@@ -99,6 +101,14 @@ describe('calculadora', function() {
     expect( () => { calculadora.parse('1 + 2 6') })
       .to.throw('Unexpected item 6 found');
   });
+
+  it('parse() should write result to log', function() {
+    sinon.spy(calculadora, 'log');
+    calculadora.parse('1 + 2');
+    expect(calculadora.log.callCount).to.equal(1);
+    calculadora.log.restore();
+  });
+
   describe('eval()', function() {
 
     it('should compute 6 + 7', function() {
@@ -129,9 +139,47 @@ describe('calculadora', function() {
       expect(calculadora.eval('3 + 4 * 5')).to.equal(35);
     })
   });
-  
+
+  it('sumaPromise() should return a promise', function() {
+    expect(calculadora.sumaPromise(1 , 5)).to.be.a('promise');
+  }); 
+
+  it('sumaPromise() should resolve to sum of 4 + 5', function(done) {
+    calculadora.sumaPromise(4, 5).then( res => {
+      expect(res).to.equal(9);
+      done();
+    });
+  });
+
+  it('sumaPromise can be used with async/await', async function() {
+    const resultado = await calculadora.sumaPromise(4, 5);
+    expect(resultado).to.equal(9);
+  });
+
+  it('fileHeader() should read a file first line', function(done) {
+    //const Calculadora2 = rewire('./calculadora.js');
+    Calculadora.__set__('fs', {
+      readFile(file, cb) {
+        cb(null, 'primera linea\nsegunda linea');
+      }
+    })
+    const calculadora = new Calculadora();
+
+    calculadora.fileHeader('zzz.xy', function(err, result) {
+      expect(result).to.equal('primera linea');
+      done();
+    });
+  });
+
+  it('httpGetName should use network request to obtain name', async function() {
+    nock('https://swapi.co')
+      .get('/api/people/1')
+      .reply(200, { name: 'FAKENAME'});
+    const name = await calculadora.httpGetName();
+    expect(name).to.equal('FAKENAME');
+  });
+
   // it.only hace que solo se evalue un test
   // xit hace que el test no se compruebe
-  
 
 });

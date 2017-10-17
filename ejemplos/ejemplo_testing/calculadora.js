@@ -1,7 +1,20 @@
 
+var fs = require('fs');
+const axios = require('axios');
+
 function Calculadora() {}
 
-Calculadora.prototype.operators = ['+', '-', '*'];
+const operator_add = '+';
+const operator_subtract = '-';
+const operator_multiply = '*';
+
+Calculadora.prototype.log = function(args) {
+  //console.log(args);
+};
+
+Calculadora.prototype.operators = [
+  operator_add, operator_subtract, operator_multiply
+];
 
 Calculadora.prototype.sum = function( a = 0, b = 0) {
   return a + b;
@@ -25,7 +38,6 @@ Calculadora.prototype.parse = function(expression) {
     //const item = iterador[1];
   for (const [index, item] of expression.split(' ').entries()) {
     
-    
     if (this.operators.includes(item)) {
       // si es una posición par lanzo excepción
       if (index % 2 === 0) { // es par
@@ -43,6 +55,7 @@ Calculadora.prototype.parse = function(expression) {
       result.push(number);
     }
   }
+  this.log('parse result:', result);
   return result;
 }
 
@@ -62,16 +75,34 @@ Calculadora.prototype.eval = function(expression) {
     }
     // si no es el primero hago la operación guardada
     switch (operator) {
-      case '+': result += item; break;
-      case '-': result -= item; break;
-      case '*': result *= item; break;
+      case operator_add      : result += item; break;
+      case operator_subtract : result -= item; break;
+      case operator_multiply : result *= item; break;
       default: 
         throw new TypeError(`Unknown operator ${operator} found`);
         break;
     }
-    operator = null;
+    // operator = null; // YAGNI
   }
   return result;
+}
+
+Calculadora.prototype.sumaPromise = function(a, b) {
+  return new Promise((resolve, reject) => {
+    resolve(a + b);
+  });
+}
+
+Calculadora.prototype.fileHeader = function(file, callback) {
+  fs.readFile(file, (err, data) => {
+    const firstLine = data.split('\n')[0];
+    callback(null, firstLine);
+  });
+}
+
+Calculadora.prototype.httpGetName = async function() {
+  const res = await axios.get('https://swapi.co/api/people/1');
+  return res.data.name;
 }
 
 module.exports = Calculadora;
