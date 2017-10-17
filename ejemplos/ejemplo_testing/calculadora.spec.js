@@ -103,7 +103,7 @@ describe('calculadora', function() {
   });
 
   it('parse() should write result to log', function() {
-    sinon.spy(calculadora, 'log');
+    sinon.stub(calculadora, 'log').returns();
     calculadora.parse('1 + 2');
     expect(calculadora.log.callCount).to.equal(1);
     calculadora.log.restore();
@@ -120,23 +120,27 @@ describe('calculadora', function() {
     });
 
     it('should compute 3 + 4 + 3', function() {
-      sinon.stub(calculadora, 'parse').callsFake(() => {
-        return [3, '+', 4, '+', 3];
-      });
+      sinon.stub(calculadora, 'parse').returns([3, '+', 4, '+', 3]);
       expect(calculadora.eval('3 + 4 + 3')).to.equal(10);
       calculadora.parse.restore();
     });
 
     it('should compute 3 + 4 + 3 + 10 + 11', function() {
+      sinon.stub(calculadora, 'parse').returns([3, '+', 4, '+', 3, '+', 10, '+', 11]);
       expect(calculadora.eval('3 + 4 + 3 + 10 + 11')).to.equal(31);
+      calculadora.parse.restore();
     });
 
     it('should compute 3 + 4 - 2', function() {
+      sinon.stub(calculadora, 'parse').returns([3, '+', 4, '-', 2]);
       expect(calculadora.eval('3 + 4 - 2')).to.equal(5);
+      calculadora.parse.restore();
     })
 
     it('should compute 3 + 4 * 5', function() {
+      sinon.stub(calculadora, 'parse').returns([3, '+', 4, '*', 5]);
       expect(calculadora.eval('3 + 4 * 5')).to.equal(35);
+      calculadora.parse.restore();
     })
   });
 
