@@ -4,7 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-const i18n = require('i18n');
 
 var app = express();
 
@@ -26,14 +25,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/estaticos', express.static('d:/estaticos'));
 
-i18n.configure({
-  directory: path.join(__dirname, 'locales'),
-  defaultLocale: 'en',
-  syncFiles: true,
-  objectNotation: true,
-  //register: global
-});
-app.use(i18n.init);
+const i18n = require('./lib/i18nConfigure')();
+app.use(i18n.init); // para inferir locale actual desde el request
 
 //console.log(i18n.__('HELLO'));
 //console.log(i18n.__({ phrase: 'HELLO', locale: 'es' }));
@@ -42,7 +35,8 @@ app.use(i18n.init);
 //   name: 'Javier', age: 33
 // }));
 //console.log(i18n.__n('Mouse', 1))
-//console.log(i18n.__n('Mouse', 2))
+//console.log(i18n.__n('Mouse', 20))
+//console.log(i18n.__({ phrase:'envia 1 bitcoin a .... para limpiar tu navegador', locale: 'es'}));
 
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));

@@ -4,9 +4,10 @@
 		"TITLE": "Welcome to..."
 	},
 	"The name is name and the age is age": "The name is {{name}} and the age is {{age}}",
-	"envia 1 bitcoin a .... para limpiar tu navegador": "envia 1 bitcoin a .... para limpiar tu navegador",
+	"envia 1 bitcoin a .... para limpiar tu navegador": "send 1 bitcoin to .... to clean your browser",
 	"Mouse": {
-    "one": "%s Mouse",
-    "other": "%s Mice"
-  }
+		"one": "%s Mouse",
+		"other": "%s Mice"
+	},
+	"Welcome to": "Welcome to"
 }

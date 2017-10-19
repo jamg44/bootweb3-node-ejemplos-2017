@@ -7,11 +7,13 @@ const { query, validationResult } = require('express-validator/check');
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
+  //console.log(res.locals);
+
   const segundo = new Date().getSeconds();
 
   res.render('index', { 
     title: 'Express',
-    valor: `<script>alert("${ i18n.__('envia 1 bitcoin a .... para limpiar tu navegador') }")</script>`,
+    valor: `<script>alert("${ __('envia 1 bitcoin a .... para limpiar tu navegador') }")</script>`,
     condicion: {
       segundo: segundo,
       estado: segundo % 2 === 0,
@@ -22,6 +24,13 @@ router.get('/', function(req, res, next) {
       { name: 'Brown', age: 33 }
     ]
   });
+});
+
+router.get('/lang/:locale', (req, res, next) => {
+  const locale = req.params.locale;
+  const referer = req.query.redir || req.get('referer');
+  res.cookie('nodeapi-lang', locale, { maxAge: 900000, httpOnly: true });
+  res.redirect(referer);
 });
 
 router.get('/hola', (req, res, next) => {
