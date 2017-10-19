@@ -1,4 +1,5 @@
 var express = require('express');
+const i18n = require('i18n');
 var router = express.Router();
 
 const { query, validationResult } = require('express-validator/check');
@@ -10,7 +11,7 @@ router.get('/', function(req, res, next) {
 
   res.render('index', { 
     title: 'Express',
-    valor: '<script>alert("envia 1 bitcoin a .... para limpiar tu navegador")</script>',
+    valor: `<script>alert("${ i18n.__('envia 1 bitcoin a .... para limpiar tu navegador') }")</script>`,
     condicion: {
       segundo: segundo,
       estado: segundo % 2 === 0,

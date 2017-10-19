@@ -1,0 +1,12 @@
+{
+	"HELLO": "Hello",
+	"HOME": {
+		"TITLE": "Welcome to..."
+	},
+	"The name is name and the age is age": "The name is {{name}} and the age is {{age}}",
+	"envia 1 bitcoin a .... para limpiar tu navegador": "envia 1 bitcoin a .... para limpiar tu navegador",
+	"Mouse": {
+    "one": "%s Mouse",
+    "other": "%s Mice"
+  }
+}

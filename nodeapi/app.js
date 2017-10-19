@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const i18n = require('i18n');
 
 var app = express();
 
@@ -18,17 +19,30 @@ app.set('view engine', 'ejs');
 require('./lib/connectMongoose');
 require('./models/Agente');
 
-app.use(function(req, res, next) {
-  //console.log('he recibido una peticion');
-  next();
-});
-
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/estaticos', express.static('d:/estaticos'));
+
+i18n.configure({
+  directory: path.join(__dirname, 'locales'),
+  defaultLocale: 'en',
+  syncFiles: true,
+  objectNotation: true,
+  //register: global
+});
+app.use(i18n.init);
+
+//console.log(i18n.__('HELLO'));
+//console.log(i18n.__({ phrase: 'HELLO', locale: 'es' }));
+//console.log(i18n.__('HOME.TITLE'));
+// console.log(i18n.__('The name is name and the age is age', {
+//   name: 'Javier', age: 33
+// }));
+//console.log(i18n.__n('Mouse', 1))
+//console.log(i18n.__n('Mouse', 2))
 
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
