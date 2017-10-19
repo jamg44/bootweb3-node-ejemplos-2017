@@ -14,7 +14,9 @@ conn.once('open', () => {
 });
 
 // la cadena de conexión es como una URL pero con protocolo mongodb
-mongoose.connect('mongodb://localhost/cursonode');
+mongoose.connect('mongodb://localhost/cursonode', {
+  useMongoClient: true // para que no salga el DeprecationWarning
+});
 
 // no necesitamos exportar la connexión ya que mongoose
 // se encarga de mantenerla internamente
