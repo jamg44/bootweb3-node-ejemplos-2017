@@ -18,7 +18,9 @@ app.set('view engine', 'ejs');
 require('./lib/connectMongoose');
 require('./models/Agente');
 
-app.use(logger('dev'));
+if (process.env.LOG_FORMAT !== 'nolog' ) {
+  app.use(logger(process.env.LOG_FORMAT || 'dev'));
+}
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -39,6 +41,7 @@ app.use(i18n.init); // para inferir locale actual desde el request
 //console.log(i18n.__({ phrase:'envia 1 bitcoin a .... para limpiar tu navegador', locale: 'es'}));
 
 app.use('/', require('./routes/index'));
+app.use('/hola', require('./routes/hola'));
 app.use('/users', require('./routes/users'));
 app.use('/apiv1/agentes', require('./routes/apiv1/agentes'));
 

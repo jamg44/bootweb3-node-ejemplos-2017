@@ -33,10 +33,6 @@ router.get('/lang/:locale', (req, res, next) => {
   res.redirect(referer);
 });
 
-router.get('/hola', (req, res, next) => {
-  res.render('hola');
-});
-
 // recibimos parámetros en la ruta
 router.get('/ruta/:algo', (req, res, next) => { // podemos poner '/ruta/:algo? y seria opcional
   console.log('parámetro en ruta', req.params);

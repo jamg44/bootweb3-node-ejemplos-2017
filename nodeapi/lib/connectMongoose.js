@@ -2,6 +2,9 @@
 
 const mongoose = require('mongoose');
 
+// le decimos a mongoose que librería de promesas usar
+mongoose.Promise = global.Promise;
+
 const conn = mongoose.connection;
 
 conn.on('error', err => {
@@ -10,7 +13,7 @@ conn.on('error', err => {
 });
 
 conn.once('open', () => {
-  console.log('Conectado a MongoDB.');
+  console.log('Conectado a MongoDB on', mongoose.connection.name);
 });
 
 // la cadena de conexión es como una URL pero con protocolo mongodb
