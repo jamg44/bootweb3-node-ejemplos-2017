@@ -9,5 +9,6 @@
 		"one": "%s Mouse",
 		"other": "%s Mice"
 	},
-	"Welcome to": "Welcome to"
+	"Welcome to": "Welcome to",
+	"Please login to access application": "Please login to access application"
 }

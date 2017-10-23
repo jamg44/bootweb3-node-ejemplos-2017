@@ -40,8 +40,14 @@ app.use(i18n.init); // para inferir locale actual desde el request
 //console.log(i18n.__n('Mouse', 20))
 //console.log(i18n.__({ phrase:'envia 1 bitcoin a .... para limpiar tu navegador', locale: 'es'}));
 
+const loginController = require('./routes/loginController');
+
 app.use('/', require('./routes/index'));
 app.use('/hola', require('./routes/hola').router);
+
+// usamos las rutas de un controlador
+app.get('/login', loginController.index);
+
 app.use('/users', require('./routes/users'));
 app.use('/apiv1/agentes', require('./routes/apiv1/agentes'));
 
