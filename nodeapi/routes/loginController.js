@@ -5,7 +5,7 @@ const i18n = require('../lib/i18nConfigure')();
 
 class LoginController {
   index(req, res, next) {
-    res.locals.email = ''; // para que la vista tenga el email
+    res.locals.email = 'admin@example.com'; // para que la vista tenga el email
     res.locals.error = '';
     res.render('login');
   }
@@ -29,8 +29,22 @@ class LoginController {
     }
 
     // el usuario está y coincide la password
+    
+    // apuntamos el usuario en la sesión
+    req.session.authUser = { _id: user._id };
+
     // le mandamos a la home
     res.redirect('/');
+  }
+
+  logout(req, res, next) {
+    delete req.session.authUser;
+    req.session.regenerate(function(err) {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('/');
+    });
   }
 }
 

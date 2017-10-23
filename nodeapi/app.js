@@ -4,6 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const session = require('express-session');
+const sessionAuth = require('./lib/sessionAuth'); 
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo')(session);
 
 var app = express();
 
@@ -42,17 +46,37 @@ app.use(i18n.init); // para inferir locale actual desde el request
 //console.log(i18n.__n('Mouse', 20))
 //console.log(i18n.__({ phrase:'envia 1 bitcoin a .... para limpiar tu navegador', locale: 'es'}));
 
+app.use('/apiv1/agentes', require('./routes/apiv1/agentes'));
+
+// middleware de control de sesiones
+app.use(session({
+  name: 'nodeapi',
+  secret: 'sdhkj fasjfakdfksdajf dkshfkwi32 yir32 iwe',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 2 * 24 * 3600 * 1000 }, // dos dias
+  store: new MongoStore({
+    // url: cadena de conexión
+    mongooseConnection: mongoose.connection,
+    autoReconnect: true,
+    clear_interval: 3600
+  })
+}));
+
 const loginController = require('./routes/loginController');
 
-app.use('/', require('./routes/index'));
+// usamos las rutas de un controlador
+app.get( '/login',  loginController.index);
+app.post('/login',  loginController.post);
+app.get( '/logout', loginController.logout);
+
+app.use(sessionAuth()); // todos los siguientes middlewares están autenticados
+
+app.use('/', sessionAuth(), require('./routes/index'));
 app.use('/hola', require('./routes/hola').router);
 
-// usamos las rutas de un controlador
-app.get('/login', loginController.index);
-app.post('/login', loginController.post);
-
 app.use('/users', require('./routes/users'));
-app.use('/apiv1/agentes', require('./routes/apiv1/agentes'));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
