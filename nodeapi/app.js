@@ -18,6 +18,7 @@ app.engine('html', require('ejs').__express);
 // Conexion a la base de datos
 require('./lib/connectMongoose');
 require('./models/Agente');
+require('./models/Usuario');
 
 if (process.env.LOG_FORMAT !== 'nolog' ) {
   app.use(logger(process.env.LOG_FORMAT || 'dev'));
@@ -48,6 +49,7 @@ app.use('/hola', require('./routes/hola').router);
 
 // usamos las rutas de un controlador
 app.get('/login', loginController.index);
+app.post('/login', loginController.post);
 
 app.use('/users', require('./routes/users'));
 app.use('/apiv1/agentes', require('./routes/apiv1/agentes'));
