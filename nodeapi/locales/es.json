@@ -8,5 +8,6 @@
 	"Mouse": "Mouse",
 	"Welcome to": "Bienvenido a",
 	"Please login to access application": "Please login to access application",
-	"Email address": "Email address"
+	"Email address": "Email address",
+	"Invalid credentials": "Invalid credentials"
 }

@@ -23,3 +23,5 @@ mongoose.connect('mongodb://localhost/cursonode', {
 
 // no necesitamos exportar la connexión ya que mongoose
 // se encarga de mantenerla internamente
+
+module.exports = conn;
