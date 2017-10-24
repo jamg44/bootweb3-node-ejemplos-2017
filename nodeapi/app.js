@@ -48,6 +48,13 @@ app.use(i18n.init); // para inferir locale actual desde el request
 
 app.use('/apiv1/agentes', require('./routes/apiv1/agentes'));
 
+// catch API 404 and forward to error handler
+app.use('/apiv1', function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
 // middleware de control de sesiones
 app.use(session({
   name: 'nodeapi',
@@ -70,7 +77,7 @@ app.get( '/login',  loginController.index);
 app.post('/login',  loginController.post);
 app.get( '/logout', loginController.logout);
 
-app.use(sessionAuth()); // todos los siguientes middlewares están autenticados
+// app.use(sessionAuth()); // todos los siguientes middlewares están autenticados
 
 app.use('/', sessionAuth(), require('./routes/index'));
 app.use('/hola', require('./routes/hola').router);
