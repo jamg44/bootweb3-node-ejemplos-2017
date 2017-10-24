@@ -9,6 +9,8 @@ const sessionAuth = require('./lib/sessionAuth');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 
+require('dotenv').config(); // inicializamos variables de entrono desde el fichero .env
+
 var app = express();
 
 // view engine setup
