@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const session = require('express-session');
 const sessionAuth = require('./lib/sessionAuth'); 
+const jwtAuth = require('./lib/jwtAuth');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 
@@ -48,7 +49,7 @@ app.use(i18n.init); // para inferir locale actual desde el request
 //console.log(i18n.__n('Mouse', 20))
 //console.log(i18n.__({ phrase:'envia 1 bitcoin a .... para limpiar tu navegador', locale: 'es'}));
 
-app.use('/apiv1/agentes', require('./routes/apiv1/agentes'));
+app.use('/apiv1/agentes', jwtAuth(), require('./routes/apiv1/agentes'));
 
 // catch API 404 and forward to error handler
 app.use('/apiv1', function(req, res, next) {
@@ -63,7 +64,7 @@ app.use(session({
   secret: 'sdhkj fasjfakdfksdajf dkshfkwi32 yir32 iwe',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 2 * 24 * 3600 * 1000 }, // dos dias
+  cookie: { maxAge: 2 * 24 * 3600 * 1000 }, // dos dias de inactividad
   store: new MongoStore({
     // url: cadena de conexión
     mongooseConnection: mongoose.connection,
@@ -77,6 +78,7 @@ const loginController = require('./routes/loginController');
 // usamos las rutas de un controlador
 app.get( '/login',  loginController.index);
 app.post('/login',  loginController.post);
+app.post('/loginjwt',  loginController.postLoginJWT);
 app.get( '/logout', loginController.logout);
 
 // app.use(sessionAuth()); // todos los siguientes middlewares están autenticados
